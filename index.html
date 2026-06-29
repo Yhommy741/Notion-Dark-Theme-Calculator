@@ -1,208 +1,371 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@500&family=MuseoModerno:wght@300;400&display=swap" rel="stylesheet">
-    <style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@400;500;600&family=MuseoModerno:wght@300;400&display=swap" rel="stylesheet">
+  <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
+
 body {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
   background: #191919;
-  font-size: 23px;
-  color: #E3E3E3;
-}
-.dark { background: #2F2F2F !important; color: #E3E3E3 !important; }
-.button > .over {
-  text-decoration: overline;
-  display: inline-block;
-  position: relative;
-  top: 3px; left: -4px;
-}
-.calculator {
-  display: inline-block;
-  background: #202020;
-  border-radius: 12px;
-  border: 1px solid #2A2A2A;
-  padding: 10px;
-}
-.calculator button {
-  font-size: x-large;
-  color: #A4A4A4;
-  width: 2.5em;
-  min-height: 2.5em;
-  margin: 0.8%;
-  border-radius: 8px;
-  background-color: #2B2B2B;
-  border: 1px solid transparent;
   font-family: 'MuseoModerno', cursive;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.1s;
 }
-.calculator button:hover, #clean:hover {
-  background: #3F3F3F !important;
-  color: #FFFFFF !important;
-  transform: scale(0.95);
+
+.calculator {
+  background: #1E1E1E;
+  border-radius: 16px;
+  border: 1px solid #2E2E2E;
+  padding: 14px;
+  width: 480px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.6);
 }
-.calculator button:focus { outline: none; }
-.button:active, .button-active {
-  background: #E1B024;
-  color: #191919;
-  transform: scale(0.9);
+
+/* ── SCREEN ── */
+.screen-wrap {
+  background: #141414;
+  border: 1px solid #2A2A2A;
+  border-radius: 12px;
+  padding: 10px 16px 8px;
+  margin-bottom: 12px;
+}
+#expr {
+  width: 100%;
+  font-size: 13px;
+  color: #666;
+  font-family: 'Dosis', sans-serif;
+  height: 18px;
+  text-align: right;
+  background: transparent;
+  border: none;
+  outline: none;
+  pointer-events: none;
+  overflow: hidden;
+  white-space: nowrap;
 }
 #screen {
-  background-color: #191919;
-  border: 1px solid #2A2A2A;
-  border-radius: 12px;
-  width: 85%;
-  height: 100px;
-  margin: 5% auto;
-  text-align: right;
-  overflow: auto;
-  overflow-wrap: break-word;
-  font-size: 50px;
-  font-family: 'Dosis', sans-serif;
+  width: 100%;
+  font-size: 46px;
   color: #E3E3E3;
-  padding: 0 10px;
+  font-family: 'Dosis', sans-serif;
+  font-weight: 600;
+  text-align: right;
+  background: transparent;
+  border: none;
+  outline: none;
+  height: 60px;
+  padding: 0;
 }
-#clean { background: #A43434; color: #FFFFFF; }
-.calculator__row1,
-.calculator__row2,
-.calculator__row3,
-.calculator__row4,
-.calculator__row5 {
+
+/* ── GRID ── */
+.row {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 5px;
+  margin-bottom: 5px;
+}
+.row:last-child { margin-bottom: 0; }
+
+/* ── BUTTONS ── */
+button {
+  font-size: 15px;
+  font-family: 'MuseoModerno', cursive;
+  color: #A4A4A4;
+  background: #2B2B2B;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  height: 48px;
+  width: 100%;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, transform 0.1s;
   display: flex;
-  margin: 0 auto;
-  max-width: 90%;
-  justify-content: space-around;
   align-items: center;
+  justify-content: center;
 }
-.calculator__row5 { margin-bottom: 3%; }
-    </style>
+button:hover {
+  background: #3A3A3A;
+  color: #FFF;
+}
+button:active {
+  transform: scale(0.92);
+  background: #E1B024;
+  color: #191919;
+}
+button:focus { outline: none; }
+
+/* Variants */
+.num   { background: #2F2F2F; color: #E3E3E3; }
+.num:hover { background: #3D3D3D; }
+
+.op    { color: #E1B024; }
+.op:hover { background: #3A3419; color: #F0C040; }
+
+.fn    { color: #7EC8E3; font-size: 13px; }
+.fn:hover { background: #1a2e35; color: #9ddff5; }
+
+.eq    { background: #E1B024; color: #191919; font-size: 20px; }
+.eq:hover { background: #F0C040 !important; color: #000 !important; }
+
+.ac    { background: #A43434; color: #FFF; }
+.ac:hover { background: #C04040 !important; color: #FFF !important; }
+
+.del   { background: #3A2828; color: #E07070; }
+.del:hover { background: #4A3030 !important; color: #FF9090 !important; }
+
+.mode  { font-size: 12px; }
+.mode.active { background: #E1B024 !important; color: #191919 !important; }
+
+/* Row 1 special positions */
+#btn-rad { grid-column: 1; }
+#btn-deg { grid-column: 2; }
+#btn-del { grid-column: 7; }
+#btn-ac  { grid-column: 8; }
+</style>
 </head>
 <body>
 <div class="calculator">
-    <input type="text" id="screen" readonly>
-    <div class="calculator__row1">
-        <button class="button" id="btn-rad">Rad</button>
-        <button class="button" id="btn-deg">Deg</button>
-        <button class="button" id="clean">AC</button>
-    </div>
-    <div class="calculator__row2">
-        <button class="button">sin</button>
-        <button class="button">cos</button>
-        <button class="button">tan</button>
-        <button class="button dark">7</button>
-        <button class="button dark">8</button>
-        <button class="button dark">9</button>
-        <button class="button">*</button>
-    </div>
-    <div class="calculator__row3">
-        <button class="button">x^</button>
-        <button class="button">pi</button>
-        <button class="button">%</button>
-        <button class="button dark">4</button>
-        <button class="button dark">5</button>
-        <button class="button dark">6</button>
-        <button class="button">/</button>
-    </div>
-    <div class="calculator__row4">
-        <button class="button">ln</button>
-        <button class="button">log</button>
-        <button class="button">x!</button>
-        <button class="button dark">1</button>
-        <button class="button dark">2</button>
-        <button class="button dark">3</button>
-        <button class="button">-</button>
-    </div>
-    <div class="calculator__row5">
-        <button class="button">&radic;<span class="over"></span></button>
-        <button class="button">(</button>
-        <button class="button">)</button>
-        <button class="button">.</button>
-        <button class="button dark">0</button>
-        <button class="button">=</button>
-        <button class="button">+</button>
-    </div>
+
+  <!-- Screen -->
+  <div class="screen-wrap">
+    <input id="expr" readonly>
+    <input id="screen" readonly placeholder="0">
+  </div>
+
+  <!-- Row 1: mode + clear -->
+  <div class="row">
+    <button id="btn-rad" class="mode fn active">Rad</button>
+    <button id="btn-deg" class="mode fn">Deg</button>
+    <button id="btn-del" class="del">⌫</button>
+    <button id="btn-ac"  class="ac">AC</button>
+  </div>
+
+  <!-- Row 2: trig + numpad top -->
+  <div class="row">
+    <button class="fn" data-action="sin">sin</button>
+    <button class="fn" data-action="cos">cos</button>
+    <button class="fn" data-action="tan">tan</button>
+    <button class="fn" data-action="asin">sin⁻¹</button>
+    <button class="num" data-action="digit">7</button>
+    <button class="num" data-action="digit">8</button>
+    <button class="num" data-action="digit">9</button>
+    <button class="op"  data-action="op">*</button>
+  </div>
+
+  <!-- Row 3: power/log + numpad mid -->
+  <div class="row">
+    <button class="fn" data-action="pow">xʸ</button>
+    <button class="fn" data-action="ln">ln</button>
+    <button class="fn" data-action="log">log</button>
+    <button class="fn" data-action="log2">log₂</button>
+    <button class="num" data-action="digit">4</button>
+    <button class="num" data-action="digit">5</button>
+    <button class="num" data-action="digit">6</button>
+    <button class="op"  data-action="op">/</button>
+  </div>
+
+  <!-- Row 4: misc fn + numpad low -->
+  <div class="row">
+    <button class="fn" data-action="sqrt">√</button>
+    <button class="fn" data-action="cbrt">∛</button>
+    <button class="fn" data-action="abs">|x|</button>
+    <button class="fn" data-action="inv">1/x</button>
+    <button class="num" data-action="digit">1</button>
+    <button class="num" data-action="digit">2</button>
+    <button class="num" data-action="digit">3</button>
+    <button class="op"  data-action="op">-</button>
+  </div>
+
+  <!-- Row 5: constants + numpad bot -->
+  <div class="row">
+    <button class="fn" data-action="pi">π</button>
+    <button class="fn" data-action="e">e</button>
+    <button class="fn" data-action="fact">x!</button>
+    <button class="fn" data-action="pct">%</button>
+    <button class="fn" data-action="op">(</button>
+    <button class="num" data-action="digit">0</button>
+    <button class="fn" data-action="dot">.</button>
+    <button class="op"  data-action="op">+</button>
+  </div>
+
+  <!-- Row 6: parens + equals -->
+  <div class="row">
+    <button class="fn" data-action="op">)</button>
+    <button class="fn" data-action="acos" style="font-size:12px">cos⁻¹</button>
+    <button class="fn" data-action="atan" style="font-size:12px">tan⁻¹</button>
+    <button class="fn" data-action="sq">x²</button>
+    <button class="fn" data-action="cube">x³</button>
+    <button class="fn" data-action="exp">EXP</button>
+    <button class="eq" data-action="eq" style="grid-column: span 2">=</button>
+  </div>
+
 </div>
 
 <script>
 var display = document.getElementById("screen");
-var isDeg = false;
+var expr    = document.getElementById("expr");
+var isDeg   = false;
+var exprStr = ""; // full expression string
 
+function toRad(v) { return isDeg ? v * Math.PI / 180 : v; }
+function toDeg(v) { return isDeg ? v * 180 / Math.PI : v; } // for inverse trig output
+
+function updateDisplay(val) {
+  display.value = val;
+}
+
+function safeEval(str) {
+  // replace ^ with ** for power
+  return eval(str.replace(/\^/g, "**"));
+}
+
+// Rad/Deg toggle
 document.getElementById("btn-rad").addEventListener("click", function() {
   isDeg = false;
-  this.style.background = "#E1B024"; this.style.color = "#191919";
-  document.getElementById("btn-deg").style.background = "";
-  document.getElementById("btn-deg").style.color = "";
+  this.classList.add("active");
+  document.getElementById("btn-deg").classList.remove("active");
 });
 document.getElementById("btn-deg").addEventListener("click", function() {
   isDeg = true;
-  this.style.background = "#E1B024"; this.style.color = "#191919";
-  document.getElementById("btn-rad").style.background = "";
-  document.getElementById("btn-rad").style.color = "";
+  this.classList.add("active");
+  document.getElementById("btn-rad").classList.remove("active");
 });
 
-function toRad(v) { return isDeg ? v * Math.PI / 180 : v; }
+// AC
+document.getElementById("btn-ac").addEventListener("click", function() {
+  exprStr = "";
+  display.value = "";
+  expr.value = "";
+  display.placeholder = "0";
+});
 
-var buttons = document.getElementsByClassName("button");
-Array.prototype.forEach.call(buttons, function(button) {
-  if (button.id === "btn-rad" || button.id === "btn-deg") return;
-  button.addEventListener("click", function() {
-    var text = button.textContent.trim();
-    var ops = ["=","AC","*","/","+","-","%","pi","√","sin","cos","tan","log","ln","x^","x!"];
-    if (!ops.includes(text)) {
-      display.value += text;
-    } else if (text === "=")   { equals(); }
-    else if (text === "AC")    { display.value = ""; }
-    else if (text === "*")     { display.value += "*"; }
-    else if (text === "/")     { display.value += "/"; }
-    else if (text === "+")     { display.value += "+"; }
-    else if (text === "-")     { display.value += "-"; }
-    else if (text === "%")     { display.value = eval(display.value) / 100; }
-    else if (text === "pi")    { display.value = display.value ? eval(display.value) * Math.PI : Math.PI; }
-    else if (text === "√")     { display.value = Math.sqrt(eval(display.value)); }
-    else if (text === "sin")   { display.value = Math.sin(toRad(eval(display.value))); }
-    else if (text === "cos")   { display.value = Math.cos(toRad(eval(display.value))); }
-    else if (text === "tan")   { display.value = Math.tan(toRad(eval(display.value))); }
-    else if (text === "log")   { display.value = Math.log10(eval(display.value)); }
-    else if (text === "ln")    { display.value = Math.log(eval(display.value)); }
-    else if (text === "x^")    { display.value += "^"; }
-    else if (text === "x!")    { factorial(); }
+// Backspace
+document.getElementById("btn-del").addEventListener("click", function() {
+  exprStr = exprStr.slice(0, -1);
+  display.value = exprStr;
+});
+
+// All other buttons
+document.querySelectorAll("button[data-action]").forEach(function(btn) {
+  btn.addEventListener("click", function() {
+    var action = btn.dataset.action;
+    var text = btn.textContent.trim();
+
+    if (action === "digit") {
+      exprStr += text;
+      display.value = exprStr;
+
+    } else if (action === "op") {
+      exprStr += text;
+      display.value = exprStr;
+
+    } else if (action === "dot") {
+      exprStr += ".";
+      display.value = exprStr;
+
+    } else if (action === "eq") {
+      doEquals();
+
+    } else if (action === "pow") {
+      exprStr += "^";
+      display.value = exprStr;
+
+    } else if (action === "sq") {
+      try { var v = safeEval(exprStr); exprStr = String(Math.pow(v,2)); display.value = exprStr; } catch(e) { display.value = "Error"; }
+
+    } else if (action === "cube") {
+      try { var v = safeEval(exprStr); exprStr = String(Math.pow(v,3)); display.value = exprStr; } catch(e) { display.value = "Error"; }
+
+    } else if (action === "sqrt") {
+      try { var v = safeEval(exprStr); exprStr = String(Math.sqrt(v)); display.value = exprStr; } catch(e) { display.value = "Error"; }
+
+    } else if (action === "cbrt") {
+      try { var v = safeEval(exprStr); exprStr = String(Math.cbrt(v)); display.value = exprStr; } catch(e) { display.value = "Error"; }
+
+    } else if (action === "abs") {
+      try { var v = safeEval(exprStr); exprStr = String(Math.abs(v)); display.value = exprStr; } catch(e) { display.value = "Error"; }
+
+    } else if (action === "inv") {
+      try { var v = safeEval(exprStr); exprStr = String(1/v); display.value = exprStr; } catch(e) { display.value = "Error"; }
+
+    } else if (action === "sin") {
+      try { var v = safeEval(exprStr); exprStr = String(Math.sin(toRad(v))); display.value = exprStr; } catch(e) { display.value = "Error"; }
+
+    } else if (action === "cos") {
+      try { var v = safeEval(exprStr); exprStr = String(Math.cos(toRad(v))); display.value = exprStr; } catch(e) { display.value = "Error"; }
+
+    } else if (action === "tan") {
+      try { var v = safeEval(exprStr); exprStr = String(Math.tan(toRad(v))); display.value = exprStr; } catch(e) { display.value = "Error"; }
+
+    } else if (action === "asin") {
+      try { var v = safeEval(exprStr); exprStr = String(toDeg(Math.asin(v))); display.value = exprStr; } catch(e) { display.value = "Error"; }
+
+    } else if (action === "acos") {
+      try { var v = safeEval(exprStr); exprStr = String(toDeg(Math.acos(v))); display.value = exprStr; } catch(e) { display.value = "Error"; }
+
+    } else if (action === "atan") {
+      try { var v = safeEval(exprStr); exprStr = String(toDeg(Math.atan(v))); display.value = exprStr; } catch(e) { display.value = "Error"; }
+
+    } else if (action === "ln") {
+      try { var v = safeEval(exprStr); exprStr = String(Math.log(v)); display.value = exprStr; } catch(e) { display.value = "Error"; }
+
+    } else if (action === "log") {
+      try { var v = safeEval(exprStr); exprStr = String(Math.log10(v)); display.value = exprStr; } catch(e) { display.value = "Error"; }
+
+    } else if (action === "log2") {
+      try { var v = safeEval(exprStr); exprStr = String(Math.log2(v)); display.value = exprStr; } catch(e) { display.value = "Error"; }
+
+    } else if (action === "fact") {
+      try {
+        var num = parseInt(safeEval(exprStr));
+        if (num < 0) { exprStr = "undefined"; }
+        else { var f=1; for(var i=num;i>0;i--) f*=i; exprStr = String(f); }
+        display.value = exprStr;
+      } catch(e) { display.value = "Error"; }
+
+    } else if (action === "pct") {
+      try { var v = safeEval(exprStr); exprStr = String(v/100); display.value = exprStr; } catch(e) { display.value = "Error"; }
+
+    } else if (action === "pi") {
+      exprStr += String(Math.PI);
+      display.value = exprStr;
+
+    } else if (action === "e") {
+      exprStr += String(Math.E);
+      display.value = exprStr;
+
+    } else if (action === "exp") {
+      exprStr += "*10^";
+      display.value = exprStr;
+    }
   });
 });
 
-function equals() {
+function doEquals() {
   try {
-    if (display.value.indexOf("^") > -1) {
-      var parts = display.value.split("^");
-      display.value = Math.pow(eval(parts[0]), eval(parts[1]));
-    } else {
-      display.value = eval(display.value);
-    }
-  } catch(e) { display.value = "Syntax Error"; }
+    expr.value = exprStr + " =";
+    var result = safeEval(exprStr);
+    // round to avoid floating point noise
+    result = parseFloat(result.toPrecision(12));
+    exprStr = String(result);
+    display.value = exprStr;
+  } catch(e) {
+    display.value = "Syntax Error";
+    exprStr = "";
+  }
 }
 
-function factorial() {
-  var num = parseInt(eval(display.value));
-  if (num === 0) { display.value = "1"; return; }
-  if (num < 0)   { display.value = "undefined"; return; }
-  var f = 1;
-  for (var i = num; i > 0; i--) f *= i;
-  display.value = f;
-}
-
-// Keyboard support
+// Keyboard
 document.addEventListener("keydown", function(e) {
   var k = e.key;
-  if ("0123456789.+-*/()".includes(k)) display.value += k;
-  else if (k === "Enter" || k === "=") equals();
-  else if (k === "Backspace") display.value = display.value.slice(0, -1);
-  else if (k === "Escape") display.value = "";
+  if ("0123456789.+-*/()".includes(k)) { exprStr += k; display.value = exprStr; }
+  else if (k === "Enter" || k === "=") doEquals();
+  else if (k === "Backspace") { exprStr = exprStr.slice(0,-1); display.value = exprStr; }
+  else if (k === "Escape") { exprStr=""; display.value=""; expr.value=""; }
 });
 </script>
 </body>
