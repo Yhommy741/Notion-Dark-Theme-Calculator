@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@500&family=MuseoModerno:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #191919;
+  font-size: 23px;
+  color: #E3E3E3;
+}
+.dark { background: #2F2F2F !important; color: #E3E3E3 !important; }
+.button > .over {
+  text-decoration: overline;
+  display: inline-block;
+  position: relative;
+  top: 3px; left: -4px;
+}
+.calculator {
+  display: inline-block;
+  background: #202020;
+  border-radius: 12px;
+  border: 1px solid #2A2A2A;
+  padding: 10px;
+}
+.calculator button {
+  font-size: x-large;
+  color: #A4A4A4;
+  width: 2.5em;
+  min-height: 2.5em;
+  margin: 0.8%;
+  border-radius: 8px;
+  background-color: #2B2B2B;
+  border: 1px solid transparent;
+  font-family: 'MuseoModerno', cursive;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+.calculator button:hover, #clean:hover {
+  background: #3F3F3F !important;
+  color: #FFFFFF !important;
+  transform: scale(0.95);
+}
+.calculator button:focus { outline: none; }
+.button:active, .button-active {
+  background: #E1B024;
+  color: #191919;
+  transform: scale(0.9);
+}
+#screen {
+  background-color: #191919;
+  border: 1px solid #2A2A2A;
+  border-radius: 12px;
+  width: 85%;
+  height: 100px;
+  margin: 5% auto;
+  text-align: right;
+  overflow: auto;
+  overflow-wrap: break-word;
+  font-size: 50px;
+  font-family: 'Dosis', sans-serif;
+  color: #E3E3E3;
+  padding: 0 10px;
+}
+#clean { background: #A43434; color: #FFFFFF; }
+.calculator__row1,
+.calculator__row2,
+.calculator__row3,
+.calculator__row4,
+.calculator__row5 {
+  display: flex;
+  margin: 0 auto;
+  max-width: 90%;
+  justify-content: space-around;
+  align-items: center;
+}
+.calculator__row5 { margin-bottom: 3%; }
+    </style>
+</head>
+<body>
+<div class="calculator">
+    <input type="text" id="screen" readonly>
+    <div class="calculator__row1">
+        <button class="button" id="btn-rad">Rad</button>
+        <button class="button" id="btn-deg">Deg</button>
+        <button class="button" id="clean">AC</button>
+    </div>
+    <div class="calculator__row2">
+        <button class="button">sin</button>
+        <button class="button">cos</button>
+        <button class="button">tan</button>
+        <button class="button dark">7</button>
+        <button class="button dark">8</button>
+        <button class="button dark">9</button>
+        <button class="button">*</button>
+    </div>
+    <div class="calculator__row3">
+        <button class="button">x^</button>
+        <button class="button">pi</button>
+        <button class="button">%</button>
+        <button class="button dark">4</button>
+        <button class="button dark">5</button>
+        <button class="button dark">6</button>
+        <button class="button">/</button>
+    </div>
+    <div class="calculator__row4">
+        <button class="button">ln</button>
+        <button class="button">log</button>
+        <button class="button">x!</button>
+        <button class="button dark">1</button>
+        <button class="button dark">2</button>
+        <button class="button dark">3</button>
+        <button class="button">-</button>
+    </div>
+    <div class="calculator__row5">
+        <button class="button">&radic;<span class="over"></span></button>
+        <button class="button">(</button>
+        <button class="button">)</button>
+        <button class="button">.</button>
+        <button class="button dark">0</button>
+        <button class="button">=</button>
+        <button class="button">+</button>
+    </div>
+</div>
+
+<script>
+var display = document.getElementById("screen");
+var isDeg = false;
+
+document.getElementById("btn-rad").addEventListener("click", function() {
+  isDeg = false;
+  this.style.background = "#E1B024"; this.style.color = "#191919";
+  document.getElementById("btn-deg").style.background = "";
+  document.getElementById("btn-deg").style.color = "";
+});
+document.getElementById("btn-deg").addEventListener("click", function() {
+  isDeg = true;
+  this.style.background = "#E1B024"; this.style.color = "#191919";
+  document.getElementById("btn-rad").style.background = "";
+  document.getElementById("btn-rad").style.color = "";
+});
+
+function toRad(v) { return isDeg ? v * Math.PI / 180 : v; }
+
+var buttons = document.getElementsByClassName("button");
+Array.prototype.forEach.call(buttons, function(button) {
+  if (button.id === "btn-rad" || button.id === "btn-deg") return;
+  button.addEventListener("click", function() {
+    var text = button.textContent.trim();
+    var ops = ["=","AC","*","/","+","-","%","pi","√","sin","cos","tan","log","ln","x^","x!"];
+    if (!ops.includes(text)) {
+      display.value += text;
+    } else if (text === "=")   { equals(); }
+    else if (text === "AC")    { display.value = ""; }
+    else if (text === "*")     { display.value += "*"; }
+    else if (text === "/")     { display.value += "/"; }
+    else if (text === "+")     { display.value += "+"; }
+    else if (text === "-")     { display.value += "-"; }
+    else if (text === "%")     { display.value = eval(display.value) / 100; }
+    else if (text === "pi")    { display.value = display.value ? eval(display.value) * Math.PI : Math.PI; }
+    else if (text === "√")     { display.value = Math.sqrt(eval(display.value)); }
+    else if (text === "sin")   { display.value = Math.sin(toRad(eval(display.value))); }
+    else if (text === "cos")   { display.value = Math.cos(toRad(eval(display.value))); }
+    else if (text === "tan")   { display.value = Math.tan(toRad(eval(display.value))); }
+    else if (text === "log")   { display.value = Math.log10(eval(display.value)); }
+    else if (text === "ln")    { display.value = Math.log(eval(display.value)); }
+    else if (text === "x^")    { display.value += "^"; }
+    else if (text === "x!")    { factorial(); }
+  });
+});
+
+function equals() {
+  try {
+    if (display.value.indexOf("^") > -1) {
+      var parts = display.value.split("^");
+      display.value = Math.pow(eval(parts[0]), eval(parts[1]));
+    } else {
+      display.value = eval(display.value);
+    }
+  } catch(e) { display.value = "Syntax Error"; }
+}
+
+function factorial() {
+  var num = parseInt(eval(display.value));
+  if (num === 0) { display.value = "1"; return; }
+  if (num < 0)   { display.value = "undefined"; return; }
+  var f = 1;
+  for (var i = num; i > 0; i--) f *= i;
+  display.value = f;
+}
+
+// Keyboard support
+document.addEventListener("keydown", function(e) {
+  var k = e.key;
+  if ("0123456789.+-*/()".includes(k)) display.value += k;
+  else if (k === "Enter" || k === "=") equals();
+  else if (k === "Backspace") display.value = display.value.slice(0, -1);
+  else if (k === "Escape") display.value = "";
+});
+</script>
+</body>
+</html>
